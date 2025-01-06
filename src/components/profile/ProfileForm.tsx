@@ -26,16 +26,69 @@ type ProfileFormProps = {
 };
 
 export default function ProfileForm({ formData, onSubmit, onChange }: ProfileFormProps) {
+const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
+const validateForm = () => {
+        const newErrors: { [key: string]: string } = {};
+
+        // Email validation
+        if (!/\S+@\S+\.\S+/.test(formData.email)) {
+            newErrors.email = "L'adresse email n'est pas valide";
+        }
+
+        // Password validation (only if it's being changed)
+        if (formData.password && formData.password.length < 8) {
+            newErrors.password = "Le mot de passe doit contenir au moins 8 caractères";
+        }
+
+        // Name validations
+        if (!formData.firstName.trim()) {
+            newErrors.firstName = "Le prénom ne peut pas être vide";
+        }
+        if (!formData.lastName.trim()) {
+            newErrors.lastName = "Le nom ne peut pas être vide";
+        }
+
+        // Birth date validation
+        if (!formData.birthDate) {
+            newErrors.birthDate = "La date de naissance est requise";
+        }
+
+        // Address validations
+        if (!formData.address.trim()) {
+            newErrors.address = "L'adresse ne peut pas être vide";
+        }
+        if (!formData.postalCode.trim()) {
+            newErrors.postalCode = "Le code postal ne peut pas être vide";
+        }
+        if (!formData.city.trim()) {
+            newErrors.city = "La ville ne peut pas être vide";
+        }
+
+        // Gender validation
+        if (!formData.gender) {
+            newErrors.gender = "Veuillez sélectionner un genre";
+        }
+
+        // Biography validation
+        if (formData.biography.length > 120) {
+            newErrors.biography = "La biographie ne doit pas dépasser 120 caractères";
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
 
     // Gestion de la soumission du formulaire
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        try {
-            await onSubmit(e);
-            Toast({ message: 'Profil mis à jour avec succès', type: 'success' });
-        } catch (err) {
-            Toast({ message: 'Erreur lors de la mise à jour du profil', type: 'error' });
+        if (validateForm()) {
+            try {
+                await onSubmit(e);
+                Toast({message: 'Profil mis à jour avec succès', type: 'success'});
+            } catch (err) {
+                Toast({message: 'Erreur lors de la mise à jour du profil', type: 'error'});
+            }
         }
     };
 

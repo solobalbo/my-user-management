@@ -37,6 +37,41 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             biography
         } = req.body;
 
+        // Field validation
+        const errors: { [key: string]: string } = {};
+
+        if (!firstName || firstName.trim().length === 0) {
+            errors.firstName = "Le prénom ne peut pas être vide";
+        }
+        if (!lastName || lastName.trim().length === 0) {
+            errors.lastName = "Le nom ne peut pas être vide";
+        }
+        if (!birthDate) {
+            errors.birthDate = "La date de naissance est requise";
+        }
+        if (!gender) {
+            errors.gender = "Veuillez sélectionner un genre";
+        }
+        if (password && password.length < 8) {
+            errors.password = "Le mot de passe doit contenir au moins 8 caractères";
+        }
+        if (!address || address.trim().length === 0) {
+            errors.address = "L'adresse ne peut pas être vide";
+        }
+        if (!postalCode || postalCode.trim().length === 0) {
+            errors.postalCode = "Le code postal ne peut pas être vide";
+        }
+        if (!city || city.trim().length === 0) {
+            errors.city = "La ville ne peut pas être vide";
+        }
+        if (biography && biography.length > 120) {
+            errors.biography = "La biographie ne doit pas dépasser 120 caractères";
+        }
+
+        if (Object.keys(errors).length > 0) {
+            return res.status(400).json({ errors });
+        }
+
         // Hash password if it's being updated
         const updates = {
             firstName,
