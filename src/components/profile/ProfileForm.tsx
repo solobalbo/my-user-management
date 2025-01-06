@@ -26,6 +26,7 @@ type ProfileFormProps = {
     formData: ProfileFormData;
     onSubmit: (e: React.FormEvent) => Promise<void>;
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    errors: { [key: string]: string };
 };
 
 export default function ProfileForm({ formData, onSubmit, onChange }: ProfileFormProps) {
@@ -139,21 +140,24 @@ const validateForm = () => {
                         type="password"
                         value={formData.currentPassword || ''}
                         onChange={onChange}
-                        />
-                        <FormField
-                            label="Nouveau mot de passe"
-                            name="newPassword"
-                            type="password"
-                            value={formData.newPassword || ''}
-                            onChange={onChange}
-                        />
-                        <FormField
-                            label="Confirmer le nouveau mot de passe"
-                            name="confirmNewPassword"
-                            type="password"
-                            value={formData.confirmNewPassword || ''}
-                            onChange={onChange}
-                        />
+                        error={errors.currentPassword}
+                    />
+                    <FormField
+                        label="Nouveau mot de passe"
+                        name="newPassword"
+                        type="password"
+                        value={formData.newPassword || ''}
+                        onChange={onChange}
+                        error={errors.newPassword}
+                    />
+                    <FormField
+                        label="Confirmer le nouveau mot de passe"
+                        name="confirmNewPassword"
+                        type="password"
+                        value={formData.confirmNewPassword || ''}
+                        onChange={onChange}
+                        error={errors.confirmNewPassword}
+                    />
     
                         {/* Champs pour la date de naissance et le genre */}
                         <FormField

@@ -22,6 +22,7 @@ export default function ProfilePage() {
         country: '',
         biography: '',
     });
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
     useEffect(() => {
         // Fonction pour récupérer les données du profil
@@ -68,6 +69,10 @@ export default function ProfilePage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+
+        // Reset errors before submission
+        setErrors({});
+
         try {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -108,6 +113,7 @@ export default function ProfilePage() {
                 formData={formData}
                 onSubmit={handleSubmit}
                 onChange={handleChange}
+                errors={errors}
             />
         </div>
     );

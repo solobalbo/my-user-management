@@ -92,6 +92,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 return res.status(400).json({ message: 'Tous les champs de mot de passe sont requis pour changer le mot de passe' });
             }
 
+            // Check if new password and confirmation match
+            if (newPassword !== confirmNewPassword) {
+                return res.status(400).json({ message: 'Les nouveaux mots de passe ne correspondent pas' });
+            }
+
             // Verify the current password
             const isMatch = await bcrypt.compare(currentPassword, user.password);
             if (!isMatch) {
@@ -106,7 +111,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             user.password = hashedPassword;
         }
 
-        // Update other fields
+// Update other fields
         const updatedUser = await User.findByIdAndUpdate(
             decoded.userId,
             {
@@ -124,6 +129,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             },
             { new: true }
         );
+
 
         if (!updatedUser) {
             return res.status(404).json({ message: 'Utilisateur non trouvé' });
