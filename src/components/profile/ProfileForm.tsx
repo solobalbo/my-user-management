@@ -44,8 +44,8 @@ export default function ProfileForm({ formData, onSubmit, onChange }: ProfileFor
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-6">
-            <FormSection title="Informations personnelles">
+        <form onSubmit={handleSubmit} className="space-y-6 animate-fade-in">
+            <FormSection title="Informations personnelles" className="animate-slide-up delay-100">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField
                         label="Prénom"
@@ -150,7 +150,8 @@ export default function ProfileForm({ formData, onSubmit, onChange }: ProfileFor
                         required
                     />
                     <div className="md:col-span-2">
-                        <label htmlFor="biography" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        <label htmlFor="biography"
+                               className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Biographie
                         </label>
                         <textarea
@@ -171,7 +172,7 @@ export default function ProfileForm({ formData, onSubmit, onChange }: ProfileFor
 
             <button
                 type="submit"
-                className="w-full py-3 px-4 border border-transparent rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                className="w-full py-3 px-4 border border-transparent rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 animate-slide-up delay-200"
             >
                 Mettre à jour le profil
             </button>

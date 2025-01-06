@@ -11,17 +11,18 @@ export default function Home() {
     }, []);
 
     return (
-        <div className="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center text-center px-4">
-            <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+        <div className="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center text-center px-4 animate-fade-in">
+            <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent animate-slide-up">
                 Bienvenue sur UserFlow
             </h1>
 
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mb-8">
-                Votre solution complète de gestion utilisateur. {!isAuthenticated && 'Créez un compte ou connectez-vous pour accéder à votre espace personnel.'}
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mb-8 animate-slide-up delay-100">
+                Votre solution complète de gestion
+                utilisateur. {!isAuthenticated && 'Créez un compte ou connectez-vous pour accéder à votre espace personnel.'}
             </p>
 
             {!isAuthenticated && (
-                <div className="flex gap-4 flex-col sm:flex-row">
+                <div className="flex gap-4 flex-col sm:flex-row animate-slide-up delay-200">
                     <a
                         href="/login"
                         className="px-8 py-3 text-lg font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
@@ -41,7 +42,8 @@ export default function Home() {
                 {features.map((feature, index) => (
                     <div
                         key={index}
-                        className="p-6 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 transition-colors"
+                        className="p-6 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 transition-all duration-300 transform hover:scale-105 hover:shadow-lg animate-slide-up"
+                        style={{ animationDelay: `${index * 100}ms` }}
                     >
                         <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100">{feature.title}</h3>
                         <p className="text-gray-600 dark:text-gray-400">{feature.description}</p>

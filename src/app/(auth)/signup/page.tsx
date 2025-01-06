@@ -56,8 +56,9 @@ export default function SignupPage() {
     };
 
     return (
-        <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4">
-            <div className="w-full max-w-md space-y-8 p-8 rounded-xl border border-gray-200 dark:border-gray-700">
+        <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 animate-fade-in">
+            <div
+                className="w-full max-w-md space-y-8 p-8 rounded-xl border border-gray-200 dark:border-gray-700 animate-slide-up">
                 <div>
                     <h2 className="text-3xl font-bold text-center mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                         Créer un compte
@@ -67,15 +68,17 @@ export default function SignupPage() {
                     </p>
                 </div>
 
-                <form className="space-y-6" onSubmit={handleSubmit}>
+                <form className="space-y-6 animate-slide-up delay-100" onSubmit={handleSubmit}>
                     {error && (
-                        <div className="bg-red-50 dark:bg-red-900/50 text-red-600 dark:text-red-400 p-3 rounded-lg text-sm">
+                        <div
+                            className="bg-red-50 dark:bg-red-900/50 text-red-600 dark:text-red-400 p-3 rounded-lg text-sm">
                             {error}
                         </div>
                     )}
 
                     <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        <label htmlFor="email"
+                               className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Email
                         </label>
                         <input
@@ -90,7 +93,8 @@ export default function SignupPage() {
                     </div>
 
                     <div>
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        <label htmlFor="password"
+                               className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Mot de passe
                         </label>
                         <input
@@ -105,7 +109,8 @@ export default function SignupPage() {
                     </div>
 
                     <div>
-                        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        <label htmlFor="confirmPassword"
+                               className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Confirmer le mot de passe
                         </label>
                         <input
@@ -127,9 +132,10 @@ export default function SignupPage() {
                     </button>
                 </form>
 
-                <p className="text-center text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-center text-sm text-gray-600 dark:text-gray-400 animate-slide-up delay-200">
                     Déjà inscrit ?{' '}
-                    <Link href="/login" className="text-blue-600 dark:text-blue-400 hover:underline">
+                    <Link href="/login"
+                          className="text-blue-600 dark:text-blue-400 hover:underline transition-all duration-300">
                         Se connecter
                     </Link>
                 </p>

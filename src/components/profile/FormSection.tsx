@@ -1,13 +1,18 @@
 type FormSectionProps = {
     title: string;
     children: React.ReactNode;
+    className?: string;
 };
 
-export default function FormSection({ title, children }: FormSectionProps) {
+export default function FormSection({ title, children, className = '' }: FormSectionProps) {
     return (
-        <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h2>
-            {children}
+        <div className={`space-y-4 transition-all duration-300 ease-in-out ${className}`}>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 transform transition-all duration-300 hover:translate-x-1">
+                {title}
+            </h2>
+            <div className="transition-all duration-300 ease-in-out">
+                {children}
+            </div>
         </div>
     );
 }
