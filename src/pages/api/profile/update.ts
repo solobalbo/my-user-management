@@ -29,7 +29,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             lastName,
             birthDate,
             gender,
-            password,
+            currentPassword,
+            newPassword,
+            confirmNewPassword,
             address,
             postalCode,
             city,
@@ -52,8 +54,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (!gender) {
             errors.gender = "Veuillez sélectionner un genre";
         }
-        if (password && password.length < 8) {
-            errors.password = "Le mot de passe doit contenir au moins 8 caractères";
+        if (newPassword && newPassword.length < 8) {
+            errors.newPassword = "Le nouveau mot de passe doit contenir au moins 8 caractères";
+        }
+        if (newPassword && newPassword !== confirmNewPassword) {
+            errors.confirmNewPassword = "Les mots de passe ne correspondent pas";
+        }
+        if (newPassword && !currentPassword) {
+            errors.currentPassword = "Le mot de passe actuel est requis pour changer le mot de passe";
         }
         if (!address || address.trim().length === 0) {
             errors.address = "L'adresse ne peut pas être vide";
@@ -72,56 +80,75 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(400).json({ errors });
         }
 
-        // Hash password if it's being updated
-        const updates = {
-            firstName,
-            lastName,
-            birthDate,
-            gender,
-            password,
-            address,
-            postalCode,
-            city,
-            country,
-            biography
-        };
-
-        if (password) {
-            updates.password = await bcrypt.hash(password, 12);
+        // Find the user
+        const user = await User.findById(decoded.userId);
+        if (!user) {
+            return res.status(404).json({ message: 'Utilisateur non trouvé' });
         }
 
+        if (currentPassword || newPassword || confirmNewPassword) {
+            // Only validate and update password if any password field is provided
+            if (!currentPassword || !newPassword || !confirmNewPassword) {
+                return res.status(400).json({ message: 'Tous les champs de mot de passe sont requis pour changer le mot de passe' });
+            }
 
-        // Mettre à jour le profil de l'utilisateur dans la base de données
+            // Verify the current password
+            const isMatch = await bcrypt.compare(currentPassword, user.password);
+            if (!isMatch) {
+                return res.status(400).json({ message: 'Le mot de passe actuel est incorrect' });
+            }
+
+            // Hash the new password
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+            // Update the user's password
+            user.password = hashedPassword;
+        }
+
+        // Update other fields
         const updatedUser = await User.findByIdAndUpdate(
             decoded.userId,
             {
-                ...updates,
-                birthDate: new Date(birthDate)
+                firstName,
+                lastName,
+                birthDate,
+                gender,
+                address,
+                postalCode,
+                city,
+                country,
+                biography,
+                // Only update password if it was changed
+                ...(currentPassword && { password: user.password }),
             },
             { new: true }
         );
-
 
         if (!updatedUser) {
             return res.status(404).json({ message: 'Utilisateur non trouvé' });
         }
 
+        // Merge the updated fields with the password change (if any)
+        Object.assign(user, updatedUser);
+
+        // Save the updated user
+        await user.save();
+
         // Renvoyer les informations mises à jour de l'utilisateur
         res.status(200).json({
             message: 'Profil mis à jour avec succès',
             user: {
-                email: updatedUser.email,
-                firstName: updatedUser.firstName,
-                lastName: updatedUser.lastName,
-                birthDate: updatedUser.birthDate ? new Date(updatedUser.birthDate).toISOString().split('T')[0] : '',
-                gender: updatedUser.gender,
-                password: updatedUser.password || '',
-                newPassword: '',  // Add this line
-                address: updatedUser.address,
-                postalCode: updatedUser.postalCode,
-                city: updatedUser.city,
-                country: updatedUser.country,
-                biography: updatedUser.biography
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                birthDate: user.birthDate ? user.birthDate.toISOString().split('T')[0] : '',
+                gender: user.gender,
+                address: user.address,
+                postalCode: user.postalCode,
+                city: user.city,
+                country: user.country,
+                biography: user.biography
             }
         });
     } catch (error) {

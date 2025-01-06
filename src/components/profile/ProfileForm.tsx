@@ -11,7 +11,10 @@ type ProfileFormData = {
     birthDate: string;
     gender: string;
     email: string;
-    password: string;
+    // password: string;
+    currentPassword: string;
+    newPassword: string;
+    confirmNewPassword: string;
     address: string;
     postalCode: string;
     city: string;
@@ -36,10 +39,18 @@ const validateForm = () => {
             newErrors.email = "L'adresse email n'est pas valide";
         }
 
-        // Password validation (only if it's being changed)
-        if (formData.password && formData.password.length < 8) {
-            newErrors.password = "Le mot de passe doit contenir au moins 8 caractères";
+    // Password validation
+    if (formData.newPassword || formData.confirmNewPassword) {
+        if (!formData.currentPassword) {
+            newErrors.currentPassword = "Veuillez entrer votre mot de passe actuel pour changer le mot de passe";
         }
+        if (formData.newPassword.length < 8) {
+            newErrors.newPassword = "Le nouveau mot de passe doit contenir au moins 8 caractères";
+        }
+        if (formData.newPassword !== formData.confirmNewPassword) {
+            newErrors.confirmNewPassword = "Les mots de passe ne correspondent pas";
+        }
+    }
 
         // Name validations
         if (!formData.firstName.trim()) {
@@ -126,117 +137,124 @@ const validateForm = () => {
                         label="Mot de passe actuel"
                         name="currentPassword"
                         type="password"
-                        value={formData.password}
+                        value={formData.currentPassword || ''}
                         onChange={onChange}
-                        readOnly
-                    />
-                    <FormField
-                        label="Nouveau mot de passe"
-                        name="password"
-                        type="password"
-                        value={formData.password}
-                        onChange={onChange}
-                    />
-
-                    {/* Champs pour la date de naissance et le genre */}
-                    <FormField
-                        label="Date de naissance"
-                        name="birthDate"
-                        type="date"
-                        value={formData.birthDate}
-                        onChange={onChange}
-                        required
-                    />
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Genre
-                        </label>
-                        <div className="flex gap-4">
-                            <label className="inline-flex items-center">
-                                <input
-                                    type="radio"
-                                    name="gender"
-                                    value="homme"
-                                    checked={formData.gender === 'homme'}
-                                    onChange={onChange}
-                                    className="form-radio text-blue-600"
-                                />
-                                <span className="ml-2 text-gray-700 dark:text-gray-300">Homme</span>
-                            </label>
-                            <label className="inline-flex items-center">
-                                <input
-                                    type="radio"
-                                    name="gender"
-                                    value="femme"
-                                    checked={formData.gender === 'femme'}
-                                    onChange={onChange}
-                                    className="form-radio text-blue-600"
-                                />
-                                <span className="ml-2 text-gray-700 dark:text-gray-300">Femme</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    {/* Champs pour l'adresse, le code postal, la ville et le pays */}
-                    <FormField
-                        label="Adresse"
-                        name="address"
-                        value={formData.address}
-                        onChange={onChange}
-                        required
-                    />
-                    <FormField
-                        label="Code postal"
-                        name="postalCode"
-                        value={formData.postalCode}
-                        onChange={onChange}
-                        required
-                    />
-                    <FormField
-                        label="Ville"
-                        name="city"
-                        value={formData.city}
-                        onChange={onChange}
-                        required
-                    />
-                    <FormField
-                        label="Pays"
-                        name="country"
-                        value={formData.country}
-                        onChange={onChange}
-                        required
-                    />
-                    {/* Champ pour la biographie */}
-                    <div className="md:col-span-2">
-                        <label htmlFor="biography"
-                               className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Biographie
-                        </label>
-                        <textarea
-                            id="biography"
-                            name="biography"
-                            rows={4}
-                            maxLength={120}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
-                            value={formData.biography}
+                        />
+                        <FormField
+                            label="Nouveau mot de passe"
+                            name="newPassword"
+                            type="password"
+                            value={formData.newPassword || ''}
                             onChange={onChange}
                         />
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                            {120 - formData.biography.length} caractères restants
-                        </p>
+                        <FormField
+                            label="Confirmer le nouveau mot de passe"
+                            name="confirmNewPassword"
+                            type="password"
+                            value={formData.confirmNewPassword || ''}
+                            onChange={onChange}
+                        />
+    
+                        {/* Champs pour la date de naissance et le genre */}
+                        <FormField
+                            label="Date de naissance"
+                            name="birthDate"
+                            type="date"
+                            value={formData.birthDate}
+                            onChange={onChange}
+                            required
+                        />
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Genre
+                            </label>
+                            <div className="flex gap-4">
+                                <label className="inline-flex items-center">
+                                    <input
+                                        type="radio"
+                                        name="gender"
+                                        value="homme"
+                                        checked={formData.gender === 'homme'}
+                                        onChange={onChange}
+                                        className="form-radio text-blue-600"
+                                    />
+                                    <span className="ml-2 text-gray-700 dark:text-gray-300">Homme</span>
+                                </label>
+                                <label className="inline-flex items-center">
+                                    <input
+                                        type="radio"
+                                        name="gender"
+                                        value="femme"
+                                        checked={formData.gender === 'femme'}
+                                        onChange={onChange}
+                                        className="form-radio text-blue-600"
+                                    />
+                                    <span className="ml-2 text-gray-700 dark:text-gray-300">Femme</span>
+                                </label>
+                            </div>
+                        </div>
+    
+                        {/* Champs pour l'adresse, le code postal, la ville et le pays */}
+                        <FormField
+                            label="Adresse"
+                            name="address"
+                            value={formData.address}
+                            onChange={onChange}
+                            required
+                        />
+                        <FormField
+                            label="Code postal"
+                            name="postalCode"
+                            value={formData.postalCode}
+                            onChange={onChange}
+                            required
+                        />
+                        <FormField
+                            label="Ville"
+                            name="city"
+                            value={formData.city}
+                            onChange={onChange}
+                            required
+                        />
+                        <FormField
+                            label="Pays"
+                            name="country"
+                            value={formData.country}
+                            onChange={onChange}
+                            required
+                        />
+                        {/* Champ pour la biographie */}
+                        <div className="md:col-span-2">
+                            <label htmlFor="biography"
+                                   className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Biographie
+                            </label>
+                            <textarea
+                                id="biography"
+                                name="biography"
+                                rows={4}
+                                maxLength={120}
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+                                value={formData.biography}
+                                onChange={onChange}
+                            />
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                {120 - formData.biography.length} caractères restants
+                            </p>
+                        </div>
                     </div>
-                </div>
-            </FormSection>
-
-            {/* Bouton de soumission du formulaire */}
-            <button
-                type="submit"
-                className="w-full py-3 px-4 border border-transparent rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 animate-slide-up delay-200"
-            >
-                Mettre à jour le profil
-            </button>
-
-
-        </form>
-    );
-}
+                </FormSection>
+    
+                {/* Bouton de soumission du formulaire */}
+                <button
+                    type="submit"
+                    className="w-full py-3 px-4 border border-transparent rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 animate-slide-up delay-200"
+                >
+                    Mettre à jour le profil
+                </button>
+    
+    
+            </form>
+        );
+    }
+    
