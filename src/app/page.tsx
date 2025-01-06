@@ -1,9 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import {useAuth} from "@/contexts/AuthContext";
 
 export default function Home() {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const {isAuthenticated, setIsAuthenticated} = useAuth()
 
     useEffect(() => {
         const token = localStorage.getItem('token');

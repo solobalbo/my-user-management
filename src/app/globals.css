@@ -16,3 +16,26 @@ body {
   color: var(--foreground);
   background: var(--background);
 }
+
+/* Default styles for mobile */
+.Toastify__toast-container {
+  top: 1em !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 320px !important;
+}
+
+.Toastify__toast {
+  max-height: 800px;
+}
+
+/* Styles for larger screens */
+@media (min-width: 768px) {
+  .Toastify__toast-container {
+    top: auto !important;
+    bottom: 1em !important;
+    left: auto !important;
+    right: 1em !important;
+    transform: none !important;
+  }
+}

@@ -26,27 +26,25 @@ type ProfileFormProps = {
 };
 
 export default function ProfileForm({ formData, onSubmit, onChange }: ProfileFormProps) {
-    const [showToast, setShowToast] = useState(false);
-    const [toastMessage, setToastMessage] = useState('');
-    const [toastType, setToastType] = useState<'success' | 'error'>('success');
 
+
+    // Gestion de la soumission du formulaire
     const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
         try {
             await onSubmit(e);
-            setToastMessage('Profil mis à jour avec succès');
-            setToastType('success');
-            setShowToast(true);
+            Toast({ message: 'Profil mis à jour avec succès', type: 'success' });
         } catch (err) {
-            setToastMessage('Erreur lors de la mise à jour du profil');
-            setToastType('error');
-            setShowToast(true);
+            Toast({ message: 'Erreur lors de la mise à jour du profil', type: 'error' });
         }
     };
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6 animate-fade-in">
+            {/* Section des informations personnelles */}
             <FormSection title="Informations personnelles" className="animate-slide-up delay-100">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Champs pour le prénom et le nom */}
                     <FormField
                         label="Prénom"
                         name="firstName"
@@ -61,6 +59,8 @@ export default function ProfileForm({ formData, onSubmit, onChange }: ProfileFor
                         onChange={onChange}
                         required
                     />
+
+                    {/* Champs pour l'email et le mot de passe */}
                     <FormField
                         label="Email"
                         name="email"
@@ -84,6 +84,8 @@ export default function ProfileForm({ formData, onSubmit, onChange }: ProfileFor
                         value={formData.password}
                         onChange={onChange}
                     />
+
+                    {/* Champs pour la date de naissance et le genre */}
                     <FormField
                         label="Date de naissance"
                         name="birthDate"
@@ -121,6 +123,8 @@ export default function ProfileForm({ formData, onSubmit, onChange }: ProfileFor
                             </label>
                         </div>
                     </div>
+
+                    {/* Champs pour l'adresse, le code postal, la ville et le pays */}
                     <FormField
                         label="Adresse"
                         name="address"
@@ -149,6 +153,7 @@ export default function ProfileForm({ formData, onSubmit, onChange }: ProfileFor
                         onChange={onChange}
                         required
                     />
+                    {/* Champ pour la biographie */}
                     <div className="md:col-span-2">
                         <label htmlFor="biography"
                                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -170,6 +175,7 @@ export default function ProfileForm({ formData, onSubmit, onChange }: ProfileFor
                 </div>
             </FormSection>
 
+            {/* Bouton de soumission du formulaire */}
             <button
                 type="submit"
                 className="w-full py-3 px-4 border border-transparent rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 animate-slide-up delay-200"
@@ -177,13 +183,7 @@ export default function ProfileForm({ formData, onSubmit, onChange }: ProfileFor
                 Mettre à jour le profil
             </button>
 
-            {showToast && (
-                <Toast
-                    message={toastMessage}
-                    type={toastType}
-                    onClose={() => setShowToast(false)}
-                />
-            )}
+
         </form>
     );
 }

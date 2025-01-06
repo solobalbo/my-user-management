@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import {useAuth} from "@/contexts/AuthContext";
 import { useState, useEffect } from 'react';
 import { UserIcon } from '@heroicons/react/24/outline';
 
 export default function Header() {
     const router = useRouter();
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const {isAuthenticated , setIsAuthenticated} = useAuth()
 
     useEffect(() => {
         const token = localStorage.getItem('token');

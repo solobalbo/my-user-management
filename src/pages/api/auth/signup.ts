@@ -5,38 +5,42 @@ import { connectDB } from '@/lib/db/mongodb';
 import { User } from '@/models/User';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    // Vérifier si la méthode de la requête est POST
     if (req.method !== 'POST') {
-        return res.status(405).json({ message: 'Method not allowed' });
+        return res.status(405).json({ message: 'Méthode non autorisée' });
     }
 
     try {
+        // Connexion à la base de données MongoDB
         await connectDB();
         const { email, password } = req.body;
 
-        // Check if user already exists
+        // Vérifier si l'utilisateur existe déjà
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ message: 'Cet email est déjà utilisé' });
         }
 
-        // Hash password
+        // Hacher le mot de passe pour le sécuriser
         const hashedPassword = await bcrypt.hash(password, 12);
 
-        // Create new user
+        // Créer un nouvel utilisateur
         const user = await User.create({
             email,
             password: hashedPassword
         });
 
-        // Generate JWT
+        // Générer un token JWT pour l'authentification
         const token = jwt.sign(
             { userId: user._id },
             process.env.JWT_SECRET || 'fallback_secret',
             { expiresIn: '7d' }
         );
 
+        // Renvoyer le token et les informations de l'utilisateur
         res.status(201).json({ token, user: { email: user.email } });
     } catch (error) {
+        // Gérer les erreurs potentielles
         res.status(500).json({ message: 'Erreur lors de l\'inscription' });
     }
 }
